@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PX DASHBOARD SYSTEM</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body class="p-4 md:p-8">
+  <div id="particles-js"></div>
+
+  <main class="max-w-5xl mx-auto space-y-6">
+    <div class="glass p-6 rounded-3xl">
+      <h1 class="text-xl font-bold">PX TEAM CONTROL</h1>
+      <p class="text-slate-400 text-sm mt-1">Redirecting to dashboard...</p>
+    </div>
+  </main>
+
+  <script>
+    particlesJS('particles-js', {
+      particles: {
+        number: { value: 70 },
+        color: { value: '#8b5cf6' },
+        opacity: { value: 0.38 },
+        size: { value: 2 },
+        line_linked: { enable: true, opacity: 0.65, width: 1.2 },
+        move: { speed: 1.35 }
+      },
+      retina_detect: true
+    });
+
+    setTimeout(() => {
+      window.location.href = 'index2.html';
+    }, 350);
+  </script>
+</body>
+</html>
+

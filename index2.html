@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PX DASHBOARD SYSTEM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body class="p-4 md:p-8">
+
+<div id="maintOverlay" class="fixed inset-0 z-[100] hidden bg-black/95 flex-col items-center justify-center p-6 text-center">
+    <i class="fa-solid fa-screwdriver-wrench text-6xl text-amber-500 mb-6 animate-pulse"></i>
+    <h1 class="text-3xl font-bold mb-2">MAINTENANCE MODE</h1>
+    <p class="text-slate-400" id="maintMsgDisplay">System is currently under maintenance.</p>
+</div>
+
+<div id="notifyOverlay" class="fixed inset-0 z-[120] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="glass px-6 py-6 rounded-3xl w-full max-w-md text-left border border-violet-500/30 shadow-2xl animate-fade-in">
+    <div class="text-center mb-4">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 mb-2">
+        <i class="fa-solid fa-circle-check text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold text-white">Berhasil membuat lisensi</h3>
+      <p class="text-xs text-slate-400 mt-1">dan menambahkan ke firebase</p>
+    </div>
+
+    <div class="space-y-3 bg-black/40 border border-slate-800/80 rounded-2xl p-4 font-sans text-sm">
+      <div class="flex justify-between items-center py-1 border-b border-slate-900">
+        <span class="text-slate-400 text-xs">Lisensi</span>
+        <span id="m_license" class="font-mono text-violet-300 font-semibold break-all text-right max-w-[200px] select-all"></span>
+      </div>
+      <div class="flex justify-between items-center py-1 border-b border-slate-900">
+        <span class="text-slate-400 text-xs">Device id</span>
+        <span id="m_deviceId" class="text-slate-200 font-semibold break-all text-right max-w-[200px]">-</span>
+      </div>
+      <div class="flex justify-between items-center py-1 border-b border-slate-900">
+        <span class="text-slate-400 text-xs">Device limit</span>
+        <span id="m_deviceLimit" class="text-slate-200 font-semibold">-</span>
+      </div>
+      <div class="flex justify-between items-center py-1 border-b border-slate-900">
+        <span class="text-slate-400 text-xs">Exp</span>
+        <span id="m_exp" class="text-slate-200 font-semibold">-</span>
+      </div>
+      <div class="flex justify-between items-center py-1">
+        <span class="text-slate-400 text-xs">Username</span>
+        <span id="m_username" class="text-slate-200 font-semibold break-all text-right max-w-[200px]">-</span>
+      </div>
+    </div>
+
+    <div class="flex gap-3 mt-6">
+      <button id="btnCopyLicense" class="flex-1 bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2">
+        <i class="fa-solid fa-copy"></i> Copy
+      </button>
+      <button id="btnCloseNotify" class="flex-1 bg-slate-900 hover:bg-slate-800 text-slate-200 font-bold py-3 rounded-xl transition">
+        Oke
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="particles-js"></div>
+
+<main class="max-w-5xl mx-auto space-y-6">
+    <header class="glass p-6 rounded-3xl flex justify-between items-center" data-anim="1">
+        <div>
+            <h1 class="text-xl font-bold">PX<span class="text-violet-500"> TEAM CONTROL</span></h1>
+            <p class="text-xs text-slate-500 mt-1">
+                <span id="uName">Admin</span>
+                <i class="fa-solid fa-shield-halved ml-2 mr-1"></i> <span id="uRole">RESELLER</span>
+            </p>
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="location.reload()" class="p-2 bg-slate-900 rounded-lg hover:text-violet-500 transition"><i class="fa-solid fa-rotate"></i></button>
+            <button onclick="logout()" class="p-2 bg-slate-900 rounded-lg text-rose-500 hover:bg-rose-950 transition"><i class="fa-solid fa-power-off"></i></button>
+            <div class="bg-black/40 border border-slate-800 px-4 py-2 rounded-xl text-violet-400 font-bold">
+                <i class="fa-solid fa-coins mr-2"></i> <span id="uToken">0</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <section class="glass p-8 rounded-3xl">
+            <h2 class="text-lg font-semibold mb-6" data-anim="2"><i class="fa-solid fa-wand-magic-sparkles text-violet-500 mr-2"></i> Generator</h2>
+<div id="prevKey" class="bg-black p-4 rounded-xl border border-violet-900/30 text-center font-mono text-xs text-violet-400 mb-6" data-anim="3">-</div>
+
+
+            <div class="space-y-4">
+                <input type="text" id="genUsername" placeholder="Username" class="w-full bg-black border border-slate-800 p-3 rounded-xl outline-none focus:border-violet-500" data-anim="1" />
+
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="number" id="genLimit" placeholder="Device Limit" class="w-full bg-black border border-slate-800 p-3 rounded-xl outline-none focus:border-violet-500" data-anim="2" />
+                    <input type="text" id="genDevId" placeholder="Device ID" class="w-full bg-black border border-slate-800 p-3 rounded-xl outline-none focus:border-violet-500" data-anim="3" />
+                </div>
+
+                <input type="text" id="genCustom" placeholder="Custom Lisensi" oninput="updatePreview()" class="w-full bg-black border border-slate-800 p-3 rounded-xl outline-none focus:border-violet-500" />
+
+                <div class="grid grid-cols-5 gap-2">
+                    <button class="btn-exp" onclick="selectExp('1D', this)">1D</button>
+                    <button class="btn-exp" onclick="selectExp('3D', this)">3D</button>
+                    <button class="btn-exp" onclick="selectExp('7D', this)">7D</button>
+                    <button class="btn-exp" onclick="selectExp('∞', this)">∞</button>
+                    <button class="btn-exp" onclick="toggleCustom(this)">Custom</button>
+                </div>
+
+                <input type="date" id="cDate" class="hidden w-full bg-black border border-slate-800 p-3 rounded-xl outline-none" />
+
+                <div class="grid grid-cols-3 gap-2">
+                    <button class="btn-tier btn-active" onclick="selectTier('LUNATIC', this)">LUNATIC</button>
+                    <button class="btn-tier" onclick="selectTier('AERIS', this)">AERIS</button>
+                    <button class="btn-tier" onclick="selectTier('SIERRA', this)">SIERRA</button>
+                </div>
+
+                <button onclick="generateLicense()" class="w-full bg-violet-600 py-4 rounded-xl font-bold hover:bg-violet-700 transition" data-anim="4"><i class="fa-solid fa-key mr-2"></i>GENERATE</button>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl">
+            <h2 class="text-lg font-semibold mb-6"><i class="fa-solid fa-box-open text-pink-500 mr-2"></i> Inventory</h2>
+            <div class="space-y-3">
+                <div class="flex justify-between items-center bg-black p-4 rounded-xl border border-slate-800 cursor-pointer hover:border-violet-500" onclick="viewModule('Lunatic')"><span>Lunatic</span><i class="fa-solid fa-chevron-right text-slate-600"></i></div>
+                <div class="flex justify-between items-center bg-black p-4 rounded-xl border border-slate-800 cursor-pointer hover:border-violet-500" onclick="viewModule('Aeris')"><span>Aeris</span><i class="fa-solid fa-chevron-right text-slate-600"></i></div>
+                <div class="flex justify-between items-center bg-black p-4 rounded-xl border border-slate-800 cursor-pointer hover:border-violet-500" onclick="viewModule('Sierra')"><span>Sierra</span><i class="fa-solid fa-chevron-right text-slate-600"></i></div>
+            </div>
+        </section>
+    </div>
+
+    <section class="glass p-8 rounded-3xl">
+        <h2 class="text-lg font-semibold mb-6"><i class="fa-solid fa-gear text-amber-500 mr-2"></i> System Maintenance</h2>
+        <input type="text" id="maintInput" placeholder="Pesan maintenance..." class="w-full bg-black border border-slate-800 p-3 rounded-xl mb-4 outline-none" />
+        <div class="flex gap-4">
+            <button onclick="toggleMaint(true)" class="flex-1 bg-red-950 text-red-400 py-3 rounded-xl font-bold hover:bg-red-900">SET MAINT ON</button>
+            <button onclick="toggleMaint(false)" class="flex-1 bg-emerald-950 text-emerald-400 py-3 rounded-xl font-bold hover:bg-emerald-900">SET MAINT OFF</button>
+        </div>
+    </section>
+
+    <!-- Copy box (bottom) -->
+    <section id="copyBox" class="glass p-8 rounded-3xl hidden">
+        <h2 class="text-lg font-semibold mb-4"><i class="fa-solid fa-copy text-violet-500 mr-2"></i> Hasil Generate</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+                <label class="text-sm text-slate-400">Username</label>
+                <input id="copyUsername" class="w-full bg-black border border-slate-800 p-3 rounded-xl outline-none focus:border-violet-500" readonly />
+            </div>
+            <div>
+                <label class="text-sm text-slate-400">Lisensi Key</label>
+                <input id="copyLicenseKey" class="w-full bg-black border border-slate-800 p-3 rounded-xl outline-none focus:border-violet-500" readonly />
+            </div>
+        </div>
+
+        <div class="mt-4 flex gap-3">
+            <button id="btnCopyAll" class="flex-1 bg-violet-600 text-white font-bold py-3 rounded-xl hover:bg-violet-700 transition" onclick="copyGeneratedAll()"><i class="fa-solid fa-paste mr-2"></i>Copy User + Key</button>
+            <button id="btnCloseCopy" class="flex-1 bg-slate-900 text-slate-200 font-bold py-3 rounded-xl hover:bg-slate-800 transition" onclick="hideCopyBox()">Tutup</button>
+        </div>
+    </section>
+</main>
+
+
+<script>
+  particlesJS('particles-js', {
+    particles: {
+      number: { value: 85 },
+      color: { value: '#8b5cf6' },
+      opacity: { value: 0.42 },
+      size: { value: 2 },
+      line_linked: { enable: true, opacity: 0.65, width: 1.2 },
+      move: { speed: 1.4 }
+    },
+    retina_detect: true
+  });
+</script>
+
+<script src="script.js"></script>
+</body>
+</html>
+
+
+
